@@ -12,7 +12,8 @@ public class GardenerProblem implements Problem
     List<Fluent> _initState;
     List<Fluent> _goals;
 
-    public GardenerProblem() {
+    public GardenerProblem()
+    {
         _fluents = Arrays.asList(
                 new Fluent("availSprk", true),  // 0
                 new Fluent("longLawn", true),   // 1
@@ -61,25 +62,29 @@ public class GardenerProblem implements Problem
     /**
      * All fluents, including negations. Immutable
      */
-    public Set<Fluent> getFluents() {
+    public Set<Fluent> getFluents()
+    {
         return Collections.unmodifiableSet(new HashSet<>(_fluents));
     }
     /**
      * All actions including persistence actions. Immutable
      */
-    public Set<Action> getActions() {
+    public Set<Action> getActions()
+    {
         return Collections.unmodifiableSet(new HashSet<>(_actions));
     }
     /**
      * Initial fluents
      */
-    public List<Fluent> getInitState() {
+    public List<Fluent> getInitState()
+    {
         return _initState;
     }
     /**
      * Final combination of fluents to be achieved
      */
-    public List<Fluent> getGoals() {
+    public List<Fluent> getGoals()
+    {
         return _goals;
     }
 }

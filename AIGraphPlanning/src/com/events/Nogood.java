@@ -11,7 +11,8 @@ import java.util.Set;
  */
 public class Nogood
 {
-    public Nogood(Level level, Set<Fluent> goals) {
+    public Nogood(Level level, Set<Fluent> goals)
+    {
         this.level = level;
         this.goals = goals;
     }
@@ -19,7 +20,8 @@ public class Nogood
     public Set<Fluent> goals;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         Nogood rhs = (Nogood) o;
         return level.equals(rhs.level) && goals.equals(rhs.goals);
     }

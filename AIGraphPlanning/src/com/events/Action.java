@@ -13,29 +13,35 @@ public class Action
     private Set<Fluent> _effect;
     private String _name;
 
-    public Action(String name) {
+    public Action(String name)
+    {
         _precond = new HashSet<>();
         _effect = new HashSet<>();
         _name = name;
     }
-    public Action(String name, Fluent[] preconds, Fluent[] effects) {
+    public Action(String name, Fluent[] preconds, Fluent[] effects)
+    {
         _precond = new HashSet<>();
         _effect = new HashSet<>();
         Collections.addAll(_precond, preconds);
         Collections.addAll(_effect, effects);
         _name = name;
     }
-    public String getName() {
+    public String getName()
+    {
         return _name;
     }
-    public Set<Fluent> getPrecond() {
+    public Set<Fluent> getPrecond()
+    {
         return Collections.unmodifiableSet(_precond);
     }
-    public Set<Fluent> getEffect() {
+    public Set<Fluent> getEffect()
+    {
         return Collections.unmodifiableSet(_effect);
     }
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         Action a = (Action) o;
         return _precond.equals(a._precond) && _effect.equals(a._effect) && _name.equals(a._name);
     }

@@ -15,7 +15,8 @@ public class PlanningGraph
      * Constructs initial level using 'initState'.
      * 'allActions' must include persistence actions
      */
-    public PlanningGraph(List<Fluent> initState, Set<Action> allActions) {
+    public PlanningGraph(List<Fluent> initState, Set<Action> allActions)
+    {
         _allActions = allActions;
         _graph = new ArrayList<>();
         Level initLvl = new Level();
@@ -28,14 +29,16 @@ public class PlanningGraph
     /**
      * True of the graph has leveled off
      */
-    public boolean leveledOff() {
+    public boolean leveledOff()
+    {
         if (_graph.size() < 2)
             return false;
         Level last = _graph.get(_graph.size() - 1);
         Level prev = _graph.get(_graph.size() - 2);
         return last.equalToLevel(prev);
     }
-    public boolean nogoodLeveledOff() {
+    public boolean nogoodLeveledOff()
+    {
         if (_search.nogood.size() < 2)
             return false;
         Nogood last = _search.nogood.get(_search.nogood.size() - 1);
@@ -45,7 +48,8 @@ public class PlanningGraph
     /**
      * Compares the last level with the goal and checks mutexes
      */
-    public boolean goalAchieved(List<Fluent> goal) {
+    public boolean goalAchieved(List<Fluent> goal)
+    {
         Level last = _graph.get(_graph.size() - 1);
         for (Fluent f : goal) {
             if (!last.containsFluent(f))
@@ -65,7 +69,8 @@ public class PlanningGraph
      * @param goals: the final goals to be achieved
      * @return list of action sets for each stage/level or null if failure
      */
-    public List<List<Action>> extractSolution(List<Fluent> goals) {
+    public List<List<Action>> extractSolution(List<Fluent> goals)
+    {
         if (_search.search(new HashSet<>(goals)))
             return _search.plan;
         return null;
@@ -73,7 +78,8 @@ public class PlanningGraph
     /**
      * Expands graph adding A[i-1] and S[i] levels
      */
-    public void generateLevel() {
+    public void generateLevel()
+    {
         Level last = _graph.get(_graph.size() - 1);
         Level next = new Level();
         next.copyActions(last.getActions());
@@ -92,14 +98,14 @@ public class PlanningGraph
                 }
                 // Check that preconditions are not mutexed
                 if (addAction) {
+                    precondCheck:
                     for (Fluent precond1 : a.getPrecond()) {
                         for (Fluent precond2 : a.getPrecond()) {
                             if (last.containsMutex(precond1, precond2)) {
                                 addAction = false;
-                                break;
+                                break precondCheck;
                             }
                         }
-                        if (!addAction) break;
                     }
                 }
                 if (addAction)
@@ -122,16 +128,14 @@ public class PlanningGraph
                         continue;
 
                     // Competing needs
-                    boolean mutAdded = false;
+                    mutexCheck:
                     for (Fluent precond1 : a1.getPrecond()) {
                         for (Fluent precond2 : a2.getPrecond()) {
                             if (last.containsMutex(precond1, precond2)) {
                                 next.addMutex(a1, a2);
-                                mutAdded = true;
-                                break;
+                                break mutexCheck;
                             }
                         }
-                        if (mutAdded) break;
                     }
                 }
             }
@@ -164,14 +168,14 @@ public class PlanningGraph
                     }
 
                     boolean addMutex = true;
+                    actionsCheck:
                     for (Action a1 : f1Actions) {
                         for (Action a2 : f2Actions) {
                             if (!next.containsMutex(a1, a2)) {
                                 addMutex = false;
-                                break;
+                                break actionsCheck;
                             }
                         }
-                        if (!addMutex) break;
                     }
                     if (addMutex)
                         next.addMutex(f1, f2);
@@ -185,7 +189,8 @@ public class PlanningGraph
      *
      * @return true if mutex added
      */
-    private static boolean addMutexIfNegation(Action a1, Action a2, Set<Fluent> set1, Set<Fluent> set2, Level lvl) {
+    private static boolean addMutexIfNegation(Action a1, Action a2, Set<Fluent> set1, Set<Fluent> set2, Level lvl)
+    {
         for (Fluent f1 : set1) {
             for (Fluent f2 : set2) {
                 if (f1.isNegationOf(f2)) {
@@ -207,12 +212,14 @@ class BackwardSearch
     List<Nogood> nogood;
     List<List<Action>> plan;
 
-    public BackwardSearch(List<Level> graph) {
+    public BackwardSearch(List<Level> graph)
+    {
         this.graph = graph;
         nogood = new ArrayList<>();
         plan = new ArrayList<List<Action>>(graph.size());
     }
-    public boolean search(Set<Fluent> goals) {
+    public boolean search(Set<Fluent> goals)
+    {
         plan.clear();
         return dfs(goals, graph.size() - 1);
     }
@@ -223,7 +230,8 @@ class BackwardSearch
      * @param lvlInd
      * @return
      */
-    private boolean dfs(Set<Fluent> goals, int lvlInd) {
+    private boolean dfs(Set<Fluent> goals, int lvlInd)
+    {
         Level lvl = graph.get(lvlInd);
 
         if (nogood.contains(new Nogood(lvl, goals)))
@@ -264,14 +272,14 @@ class BackwardSearch
 
             // Checking if the node is conflict-free
             boolean conflictFree = true;
+            conflictCheck:
             for (Action a1 : node) {
                 for (Action a2 : node) {
                     if (lvl.containsMutex(a1, a2)) {
                         conflictFree = false;
-                        break;
+                        break conflictCheck;
                     }
                 }
-                if (!conflictFree) break;
             }
 
             // Recursive call with new goal set if conflict-free
@@ -281,7 +289,7 @@ class BackwardSearch
                     newGoals.addAll(a.getPrecond());
 
                 if (lvlInd == 1 || dfs(newGoals, lvlInd - 1)) {
-                    plan.add(lvlInd-1, node);
+                    plan.add(lvlInd - 1, node);
                     return true;
                 }
             }
@@ -301,7 +309,8 @@ class BackwardSearch
      * @param indexId    must start with least significant index when called initially
      * @return false if not possible to increment further
      */
-    private boolean incrementIndex(int[] indexes, int[] maxIndexes, int indexId) {
+    private boolean incrementIndex(int[] indexes, int[] maxIndexes, int indexId)
+    {
         if (indexes[indexId] == maxIndexes[indexId]) {
             if (indexId > 0)
                 return incrementIndex(indexes, maxIndexes, indexId - 1);

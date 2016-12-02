@@ -17,7 +17,8 @@ public class Level
     private Set<Pair<Action>> _actionMutexes;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         Level rhs = (Level) o;
         return rhs._fluentSet.equals(_fluentSet) && rhs._fluentMutexes.equals(_fluentMutexes) &&
                 rhs._actions.equals(_actions) && rhs._actionMutexes.equals(_actionMutexes);
@@ -25,7 +26,8 @@ public class Level
     /**
      * Creates an empty level
      */
-    public Level() {
+    public Level()
+    {
         _fluentSet = new HashSet<>();
         _fluentMutexes = new HashSet<>();
         _actions = new HashSet<>();
@@ -37,7 +39,8 @@ public class Level
      * @param prev: Previous level
      * @return 'true' if fluent sets are equal (regardless of mutexes)
      */
-    public boolean equalToLevel(Level prev) {
+    public boolean equalToLevel(Level prev)
+    {
         if (_fluentSet.size() != prev._fluentSet.size() ||
                 _fluentMutexes.size() != prev._fluentMutexes.size())
             return false;
@@ -52,33 +55,42 @@ public class Level
         return true;
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    public boolean containsAction(Action a) {
+    public boolean containsAction(Action a)
+    {
         return _actions.contains(a);
     }
-    public void addAction(Action a) {
+    public void addAction(Action a)
+    {
         _actions.add(a);
     }
-    public Set<Action> getActions() {
+    public Set<Action> getActions()
+    {
         return Collections.unmodifiableSet(_actions);
     }
-    public void copyActions(Set<Action> from) {
+    public void copyActions(Set<Action> from)
+    {
         _actions.addAll(from);
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    public boolean containsFluent(Fluent f) {
+    public boolean containsFluent(Fluent f)
+    {
         return _fluentSet.contains(f);
     }
-    public void addFluent(Fluent f) {
+    public void addFluent(Fluent f)
+    {
         _fluentSet.add(f);
     }
-    public Set<Fluent> getFluents() {
+    public Set<Fluent> getFluents()
+    {
         return Collections.unmodifiableSet(_fluentSet);
     }
-    public void copyFluents(Set<Fluent> from) {
+    public void copyFluents(Set<Fluent> from)
+    {
         _fluentSet.addAll(from);
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    public boolean containsMutex(Fluent f1, Fluent f2) {
+    public boolean containsMutex(Fluent f1, Fluent f2)
+    {
         if (!_fluentSet.contains(f1) || !_fluentSet.contains(f2))
             return false;
         for (Pair<Fluent> pair : _fluentMutexes) {
@@ -88,7 +100,8 @@ public class Level
         }
         return false;
     }
-    public boolean containsMutex(Action a1, Action a2) {
+    public boolean containsMutex(Action a1, Action a2)
+    {
         if (!_actions.contains(a1) || !_actions.contains(a2))
             return false;
         for (Pair<Action> pair : _actionMutexes) {
@@ -98,10 +111,12 @@ public class Level
         }
         return false;
     }
-    public void addMutex(Fluent f1, Fluent f2) {
+    public void addMutex(Fluent f1, Fluent f2)
+    {
         _fluentMutexes.add(new Pair<>(f1, f2));
     }
-    public void addMutex(Action a1, Action a2) {
+    public void addMutex(Action a1, Action a2)
+    {
         _actionMutexes.add(new Pair<>(a1, a2));
     }
 }

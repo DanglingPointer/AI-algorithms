@@ -10,16 +10,18 @@ public class Graphplan
     private Problem _problem;
     private PlanningGraph _graph;
 
-    public Graphplan(Problem prob) {
+    public Graphplan(Problem prob)
+    {
         _problem = prob;
         _graph = new PlanningGraph(prob.getInitState(), prob.getActions());
     }
     /**
      * Returns solution or null
      */
-    public List<List<Action>> Solve() {
-        for(;;){
-            if (_graph.goalAchieved(_problem.getGoals())){
+    public List<List<Action>> Solve()
+    {
+        for (; ; ) {
+            if (_graph.goalAchieved(_problem.getGoals())) {
                 List<List<Action>> solution = _graph.extractSolution(_problem.getGoals());
                 if (solution != null)
                     return solution;

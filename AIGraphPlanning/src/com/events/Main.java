@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Main
 {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         // write your code here
         Problem gardener = new GardenerProblem();
         Graphplan solver = new Graphplan(gardener);
